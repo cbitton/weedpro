@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weed PRO 2014</title>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery.js"></script>
+{% load bootstrap_themes %}
+{% bootstrap_styles theme='default' type='css' %}
+{% bootstrap_script use_min=False %}
+</head>
+
+<body>
+<h1>WEED PRO 2014</h1>
+<p>Weed Pro 75 is an online herbicide selection tool that focuses on profitability and environmental stewardship. You are 4 steps away from identifying herbicide options that best match your priorities as a producer.</p>
+{% csrf_token %}
+<h4><span class="label label-default">CROP SELECTION</span></h4>
+<div class="row">
+  <label for="cropSelect" class="col-sm-2 control-label">Select crop</label>
+  <div class="col-sm-2">
+    <select class="form-control" id="cropSelect" name="cropSelect">
+      {% for crop in crop_list %}
+        <option>{{ crop.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <label for="subCrop" class="col-sm-2 control-label">Select crop species</label>
+  <div class="col-sm-2">
+  {% for crop in crop_list %}
+    <select class="form-control" id="subCrop" name={{ crop.name }}>
+      {% for crop_type in crop.crop_detail_set.all %}
+        {% if crop_type.underseed %}
+	  <option value="{{ crop.name }}-{{ crop_type.crop_type }}{{ crop_type.underseed }}">{{ crop_type.crop_type }} underseeded with: {{ crop_type.underseed }}
+	{% else %}
+	  <option value="{{ crop.name }}-{{ crop_type.crop_type }}">{{ crop_type.crop_type }}</option>
+	{% endif %}
+      {% endfor %}
+    </select>
+  {% endfor %}
+  </div>
+</div>
+
+<script>
+var $topSelect = $('select[name="cropSelect"]');
+var $nestedSelects = $('select[name!="cropSelect"]');
+showApplicableSelect();
+$topSelect.change(showApplicableSelect);
+function showApplicableSelect() {
+    $nestedSelects.hide();
+        $('select[name="' + $topSelect.val() + '"]').show();
+	}
+</script>
+
+<h4><span class="label label-default">WHAT DO YOU WANT TO DO?</span></h4>
+
+<a href="weeds" class="btn btn-primary active" role="button">Control weeds</a>
+<br>
+<br>
+<a href="treatment" class="btn btn-primary active" role="button">Find a herbicide treatment</a>
+
+
+</body>
+</html>

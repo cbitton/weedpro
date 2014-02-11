@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+<h4><span class="label label-default">Select herbicde treatment or compare:</span></h4>
+{%if latest_treatment_list %}
+<ul>
+  {% for treat in latest_treatment_list %}
+    <li><a href="{% url 'treatment:detail' treat.id %}">{{ treat.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No treatments are available.</p>
+{% endif %}
+{% endblock %}
