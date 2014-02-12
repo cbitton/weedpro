@@ -5,11 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}Weed PRO 2014{% endblock %}</title>
 </head>
-<!-- jQuery -->
+<!-- Include Twitter Bootstrap & jQuery -->
 <script src="https://code.jquery.com/jquery.js"></script>
+{% load staticfiles %}
 {% load bootstrap_themes %}
 {% bootstrap_styles theme='default' type='css' %}
 {% bootstrap_script use_min=False %}
+<!-- Include the plugin's CSS & JS -->
+<script type="text/javascript" src="{% static "weedpro/js/bootstrap-multiselect.js" %}"></script>
+<link rel="stylesheet" href="{% static "weedpro/css/bootstrap-multiselect.css" %}" type="text/css"/>
 <body>
 {% block body %}
 {% endblock %}

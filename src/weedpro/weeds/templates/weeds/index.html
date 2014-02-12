@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block body %}
+<h4><span class="label label-default">Pick up to 10 weeds you wish to control and in order of importance.</span></h4>
+{%if latest_weed_list %}
+    <select class="multiselect" multiple="multiple">
+  {% for weed in latest_weed_list %}
+      <option value="{{ weed.name }}">{{ weed.name }}</option>
+  {% endfor %}
+    </select>
+{% else %}
+<p>No treatments are available.</p>
+{% endif %}
+
+{% comment %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.multiselect').multiselect({
+      enableCaseInsensitiveFiltering: true,
+      onChange: function(option, checked) {
+        // Get selected options.
+	var selectedOptions = $('.multiselect option:selected');
+
+	if (selectedOptions.length >= 10) {
+	  // Disabled all other checkboxes.
+	  var nonSelectedOptions = $('.multiselect option').filter(function() {
+	    return !$(this).is(':selected');
+	  });
+
+	  var dropdown = $('.multiselect').siblings('.multiselect-container');
+	  nonSelectedOptions.each(function() {
+	    var input = $('input[value="' + $(this).val() + '"]');
+	    input.prop('disabled', true);
+	    input.parent('li').addClass('disabled');
+	  });
+	}
+	else {
+	  // Enabled all checkboxes.
+	  var dropdown = $('.multiselect').siblings('.multiselect-container');
+	  $('.multiselect option').each(function() {
+	    var input = $('input[value="' + $(this).val() + '"]');
+	    input.prop('disabled', false);
+	    input.parent('li').addClass('disabled');
+	  });
+	}
+   }
+  });
+  });
+</script>
+{% endcomment %}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var orderCount = 0;
+    $('.multiselect').multiselect({
+      enableCaseInsensitiveFiltering: true,
+      buttonText: function(options) {
+        if (options.length == 0) {
+          return 'None selected <b class="caret"></b>';
+        }
+        else if (options.length > 3) {
+          return options.length + ' selected <b class="caret"></b>';
+        }
+        else {
+          var selected = [];
+          options.each(function() {
+            selected.push([$(this).text(), $(this).data('order')]);
+          });
+
+          selected.sort(function(a, b) {
+            return a[1] - b[1];
+          })
+  
+          var text = '';
+          for (var i = 0; i < selected.length; i++) {
+            text += selected[i][0] + ', ';
+          }
+
+          return text.substr(0, text.length -2) + ' ';
+        }
+      },
+      onChange: function(option, checked) {
+        if (checked) {
+          orderCount++;
+          $(option).data('order', orderCount);
+	  alert($(option).data('order'));
+        }
+        else {
+          $(option).data('order', '');
+        }
+      }
+    });
+
+  });
+</script>
+
+<ul class="pager">
+<li class="previous"><a href="/">&larr; Previous</a></li>
+<li class="previous"><a href="#">Next &rarr;</a></li>
+</ul>
+{% endblock %}
